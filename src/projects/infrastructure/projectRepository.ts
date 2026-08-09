@@ -1,7 +1,8 @@
 import { SqliteClient } from "@effect/sql-sqlite-bun";
 import { Array, Context, Effect, Layer, Option } from "effect";
-import { DatabaseError, DatabaseLive } from "../../database/live";
+import { DatabaseLive } from "../../database/Database.Live";
 import { fromRecordProject, type UnRecordedProject } from "../domain";
+import { DatabaseError } from "../../database/DatabaseError";
 
 type ProjectRow = {
   readonly id: number;
@@ -61,7 +62,7 @@ export class ProjectRepository extends Context.Service<ProjectRepository>()(
     }),
   },
 ) {
-  static readonly layer = Layer.effect(this, this.make).pipe(
+  static readonly Live = Layer.effect(this, this.make).pipe(
     Layer.provide(DatabaseLive),
   );
 }

@@ -4,9 +4,9 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "db:migrate": "bun run src/database/migrate.ts",
-    "db:reset": "bun run src/database/reset.ts",
-    "dev": "bun run src/server.ts",
+    "db:migrate": "bun run src/database/utils/migrate.ts",
+    "db:reset": "bun run src/database/utils/reset.ts",
+    "dev": "bun run db:migrate && bun run src/server.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

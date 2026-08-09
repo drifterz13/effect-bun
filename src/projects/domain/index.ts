@@ -5,10 +5,10 @@ export {
   makeUnrecordProject,
   fromRecordProject,
   addTasklist,
-} from "./project";
+} from "./Project";
 export {
   type Tasklist,
   type TasklistId,
   type TasklistError,
   makeTasklist,
-} from "./tasklist";
+} from "./Tasklist";

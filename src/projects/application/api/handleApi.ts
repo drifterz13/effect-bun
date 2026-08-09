@@ -1,6 +1,6 @@
 import { Effect, Match, Schema } from "effect";
 import type { ProjectError, TasklistError } from "../../domain";
-import type { DatabaseError } from "../../../database/live";
+import type { DatabaseError } from "../../../database/DatabaseError";
 
 export type ApiResponse<T> =
   | { status: number; data: T }

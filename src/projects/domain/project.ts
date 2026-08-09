@@ -1,5 +1,5 @@
 import { Data, Result, Schema, Struct } from "effect";
-import { TasklistId } from "./tasklist";
+import { TasklistId } from "./Tasklist";
 
 export const ProjectId = Schema.Int.pipe(Schema.brand("ProjectId"));
 

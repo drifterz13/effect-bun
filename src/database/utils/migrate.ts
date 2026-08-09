@@ -1,7 +1,7 @@
 import { SqliteMigrator } from "@effect/sql-sqlite-bun";
 import { Effect } from "effect";
-import { DatabaseLive } from "../live";
 import migration001 from "../migrations/001_init";
+import { DatabaseLive } from "../Database.Live";
 
 const migrations = SqliteMigrator.fromRecord({
   "001_init": migration001,

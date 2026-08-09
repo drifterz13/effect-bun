@@ -1,4 +1,2 @@
-import { createProject } from "./createProject";
-import { findProject } from "./findProjects";
-
-export { createProject, findProject };
+export { CreateProject } from "./CreateProject";
+export { FindProject } from "./FindProjects";

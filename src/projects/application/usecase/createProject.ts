@@ -1,8 +1,8 @@
 import { Effect, Schema } from "effect";
-import { ProjectService } from "../service/projectService";
-import { ProjectDTOSchema } from "../dto/projectDto";
+import { ProjectService } from "../../domain/ProjectService";
+import { ProjectDTOSchema } from "../dto/ProjectDto";
 
-export const createProject = (dto: unknown) =>
+export const CreateProject = (dto: unknown) =>
   Effect.gen(function* () {
     const projectSvc = yield* ProjectService;
 

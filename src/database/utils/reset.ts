@@ -1,10 +1,15 @@
 import { $ } from "bun";
-import { readdir } from "node:fs/promises";
 
-const dbPath = "./data";
-const dbFiles = await readdir(dbPath);
-for (const file of dbFiles) {
-  const filePath = `${dbPath}/${file}`;
-  await $`rm -f ${filePath}`;
+const dbFiles = [
+  "./data/app.sqlite",
+  "./data/app.sqlite-shm",
+  "./data/app.sqlite-wal",
+];
+
+for (const filePath of dbFiles) {
+  if (await Bun.file(filePath).exists()) {
+    await $`rm -f ${filePath}`;
+  }
 }
+
 console.log("Reset database complete.");
