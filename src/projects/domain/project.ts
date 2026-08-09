@@ -1,12 +1,15 @@
-import { Array, Data, Either, Match, pipe, Schema } from "effect";
+import { Data, Result, Schema } from "effect";
 import { TasklistId } from "./tasklist";
 
 const ProjectId = Schema.Int.pipe(Schema.brand("ProjectId"));
 
 const ProjectSchema = Schema.Struct({
   id: ProjectId,
-  title: Schema.String.pipe(Schema.minLength(1), Schema.maxLength(100)),
-  description: Schema.String.pipe(Schema.maxLength(255)),
+  title: Schema.String.check(
+    Schema.isMinLength(1),
+    Schema.isMaxLength(100),
+  ),
+  description: Schema.String.check(Schema.isMaxLength(255)),
   tasklistIds: Schema.Array(TasklistId),
 });
 
@@ -26,20 +29,20 @@ export type ProjectError = InvalidProjectError | DuplicateTasklistError;
 export const makeProjectId = (id: number) => ProjectId.make(id);
 export const makeProject = (
   data: unknown,
-): Either.Either<Project, InvalidProjectError> =>
-  pipe(
-    data,
-    Schema.decodeUnknownEither(ProjectSchema),
-    Either.mapLeft((err) => new InvalidProjectError({ message: err.message })),
+): Result.Result<Project, InvalidProjectError> =>
+  Schema.decodeUnknownResult(ProjectSchema)(data).pipe(
+    Result.mapError(
+      (error) => new InvalidProjectError({ message: error.message }),
+    ),
   );
 
 export const addTasklist = (project: Project, tasklistId: TasklistId) => {
   if (project.tasklistIds.includes(tasklistId)) {
-    return Either.left(new DuplicateTasklistError({ tasklistId }));
+    return Result.fail(new DuplicateTasklistError({ tasklistId }));
   }
 
-  return Either.right({
+  return Result.succeed({
     ...project,
-    tasklistIds: Array.append(project.tasklistIds, tasklistId),
+    tasklistIds: [...project.tasklistIds, tasklistId],
   });
 };

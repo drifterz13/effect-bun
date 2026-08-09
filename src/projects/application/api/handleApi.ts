@@ -1,4 +1,4 @@
-import { Effect, Match, ParseResult } from "effect";
+import { Effect, Match, Schema } from "effect";
 import type { ProjectError, TasklistError } from "../../domain";
 
 export type ApiResponse<T> =
@@ -6,24 +6,17 @@ export type ApiResponse<T> =
   | { status: number; error: string; details?: unknown };
 
 export type ProjectApplicationError =
-  | ParseResult.ParseError
+  | Schema.SchemaError
   | ProjectError
   | TasklistError;
 
 const toProjectError = Match.type<ProjectApplicationError>().pipe(
   Match.tagsExhaustive({
-    ParseError: (error) => {
-      const issues = ParseResult.ArrayFormatter.formatErrorSync(error);
-      return {
-        status: 400,
-        error: "Invalid request",
-        details: issues.map((issue) => ({
-          field: issue.path.join("."),
-          message: issue.message,
-          code: issue._tag,
-        })),
-      };
-    },
+    SchemaError: (error) => ({
+      status: 400,
+      error: "Invalid request",
+      details: error.message,
+    }),
     InvalidProjectError: (error) => ({
       status: 400,
       error: error.message,
@@ -45,8 +38,8 @@ export const handleApi = <A, R>(
 ): Effect.Effect<ApiResponse<A>, never, R> =>
   effect.pipe(
     Effect.map((data) => ({ status: successStatus, data })),
-    Effect.catchAll((error) => Effect.succeed(toProjectError(error))),
-    Effect.catchAllDefect((defect) =>
+    Effect.catch((error) => Effect.succeed(toProjectError(error))),
+    Effect.catchDefect((defect) =>
       Effect.succeed({
         status: 500,
         error: "Internal Server Error",

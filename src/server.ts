@@ -3,7 +3,7 @@ import { ProjectService } from "./projects/application/service/projectService";
 import * as projectProgram from "./projects/application/usecase";
 import { handleApi } from "./projects/application/api/handleApi";
 
-const appRuntime = ManagedRuntime.make(ProjectService.Default);
+const appRuntime = ManagedRuntime.make(ProjectService.layer);
 
 const server = Bun.serve({
   port: 4000,

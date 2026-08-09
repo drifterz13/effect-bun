@@ -1,9 +1,12 @@
-import { Data, Either, pipe, Schema } from "effect";
+import { Data, Result, Schema } from "effect";
 
 export const TasklistId = Schema.Int.pipe(Schema.brand("TasklistId"));
 const TasklistSchema = Schema.Struct({
   id: TasklistId,
-  title: Schema.String.pipe(Schema.minLength(1), Schema.maxLength(50)),
+  title: Schema.String.check(
+    Schema.isMinLength(1),
+    Schema.isMaxLength(50),
+  ),
 });
 
 export type Tasklist = Schema.Schema.Type<typeof TasklistSchema>;
@@ -18,9 +21,9 @@ export type TasklistError = InvalidTasklistError;
 export const makeTasklistId = (id: number) => TasklistId.make(id);
 export const makeTasklist = (
   data: unknown,
-): Either.Either<Tasklist, InvalidTasklistError> =>
-  pipe(
-    data,
-    Schema.decodeUnknownEither(TasklistSchema),
-    Either.mapLeft((err) => new InvalidTasklistError({ message: err.message })),
+): Result.Result<Tasklist, InvalidTasklistError> =>
+  Schema.decodeUnknownResult(TasklistSchema)(data).pipe(
+    Result.mapError(
+      (error) => new InvalidTasklistError({ message: error.message }),
+    ),
   );

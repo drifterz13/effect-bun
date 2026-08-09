@@ -1,4 +1,4 @@
-import { Effect, HashMap, Random, Ref } from "effect";
+import { Context, Effect, HashMap, Layer, Random, Ref } from "effect";
 import {
   makeProject,
   makeProjectId,
@@ -8,10 +8,10 @@ import {
 } from "../../domain";
 import type { ProjectDTO } from "../dto/projectDto";
 
-export class ProjectService extends Effect.Service<ProjectService>()(
+export class ProjectService extends Context.Service<ProjectService>()(
   "app/ProjectService",
   {
-    effect: Effect.gen(function* () {
+    make: Effect.gen(function* () {
       const projects = yield* Ref.make(HashMap.empty<ProjectId, Project>());
 
       return {
@@ -24,12 +24,14 @@ export class ProjectService extends Effect.Service<ProjectService>()(
             const rawId = yield* Random.nextIntBetween(1, 100);
             const projectId = makeProjectId(rawId);
 
-            const project = yield* makeProject({
-              id: projectId,
-              title: data.title,
-              description: data.description,
-              tasklistIds: [],
-            });
+            const project = yield* Effect.fromResult(
+              makeProject({
+                id: projectId,
+                title: data.title,
+                description: data.description,
+                tasklistIds: [],
+              }),
+            );
             yield* Ref.update(projects, (ref) =>
               HashMap.set(ref, projectId, project),
             );
@@ -38,6 +40,7 @@ export class ProjectService extends Effect.Service<ProjectService>()(
           }),
       };
     }),
-    dependencies: [],
   },
-) {}
+) {
+  static readonly layer = Layer.effect(this, this.make);
+}
