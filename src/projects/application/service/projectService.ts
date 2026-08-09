@@ -16,10 +16,9 @@ export class ProjectService extends Effect.Service<ProjectService>()(
 
       return {
         find: (): Effect.Effect<Project[], never> =>
-          Effect.gen(function* () {
-            const projectsRef = yield* Ref.get(projects);
-            return Array.from(HashMap.values(projectsRef));
-          }),
+          Ref.get(projects).pipe(
+            Effect.map((ref) => Array.from(HashMap.values(ref))),
+          ),
         create: (data: ProjectDTO): Effect.Effect<Project, ProjectError> =>
           Effect.gen(function* () {
             const rawId = yield* Random.nextIntBetween(1, 100);

@@ -14,14 +14,14 @@ const server = Bun.serve({
         const resp = await appRuntime.runPromise(
           handleApi(projectProgram.findProject),
         );
-        return Response.json(resp);
+        return Response.json(resp, { status: resp.status });
       }
       if (req.method === "POST") {
         const body = await req.json();
         const resp = await appRuntime.runPromise(
           handleApi(projectProgram.createProject(body)),
         );
-        return Response.json(resp);
+        return Response.json(resp, { status: resp.status });
       }
 
       return Response.json({ details: "Method not allowed" }, { status: 405 });

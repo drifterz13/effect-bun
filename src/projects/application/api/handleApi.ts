@@ -1,4 +1,4 @@
-import { Cause, Effect, Match, Option, ParseResult } from "effect";
+import { Effect, Match, ParseResult } from "effect";
 import type { ProjectError, TasklistError } from "../../domain";
 
 export type ApiResponse<T> =
@@ -45,14 +45,12 @@ export const handleApi = <A, R>(
 ): Effect.Effect<ApiResponse<A>, never, R> =>
   effect.pipe(
     Effect.map((data) => ({ status: successStatus, data })),
-    Effect.catchAllCause((cause) =>
-      Option.match(Cause.failureOption(cause), {
-        onSome: (error) => Effect.succeed(toProjectError(error)),
-        onNone: () =>
-          Effect.succeed({
-            status: 500,
-            error: "Internal Server Error",
-          }),
+    Effect.catchAll((error) => Effect.succeed(toProjectError(error))),
+    Effect.catchAllDefect((defect) =>
+      Effect.succeed({
+        status: 500,
+        error: "Internal Server Error",
+        details: String(defect),
       }),
     ),
   );

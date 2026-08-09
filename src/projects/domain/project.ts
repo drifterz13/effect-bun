@@ -33,17 +33,13 @@ export const makeProject = (
     Either.mapLeft((err) => new InvalidProjectError({ message: err.message })),
   );
 
-export const addTasklist = (project: Project, tasklistId: TasklistId) =>
-  Match.value(project.tasklistIds.includes(tasklistId)).pipe(
-    Match.withReturnType<Either.Either<Project, DuplicateTasklistError>>(),
-    Match.when(true, () => {
-      const err = new DuplicateTasklistError({ tasklistId });
-      return Either.left(err);
-    }),
-    Match.orElse(() =>
-      Either.right({
-        ...project,
-        tasklistIds: Array.append(project.tasklistIds, tasklistId),
-      }),
-    ),
-  );
+export const addTasklist = (project: Project, tasklistId: TasklistId) => {
+  if (project.tasklistIds.includes(tasklistId)) {
+    return Either.left(new DuplicateTasklistError({ tasklistId }));
+  }
+
+  return Either.right({
+    ...project,
+    tasklistIds: Array.append(project.tasklistIds, tasklistId),
+  });
+};
