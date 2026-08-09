@@ -1,12 +1,10 @@
 import { Data, Result, Schema } from "effect";
 
 export const TasklistId = Schema.Int.pipe(Schema.brand("TasklistId"));
+
 const TasklistSchema = Schema.Struct({
   id: TasklistId,
-  title: Schema.String.check(
-    Schema.isMinLength(1),
-    Schema.isMaxLength(50),
-  ),
+  title: Schema.String.check(Schema.isMinLength(1), Schema.isMaxLength(50)),
 });
 
 export type Tasklist = Schema.Schema.Type<typeof TasklistSchema>;

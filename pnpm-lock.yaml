@@ -8,9 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@effect/sql-sqlite-bun':
+        specifier: 4.0.0-beta.106
+        version: 4.0.0-beta.106(effect@4.0.0-beta.106)
       effect:
-        specifier: 4.0.0-beta.105
-        version: 4.0.0-beta.105
+        specifier: 4.0.0-beta.106
+        version: 4.0.0-beta.106
       typescript:
         specifier: ^5
         version: 5.9.3
@@ -20,6 +23,11 @@ importers:
         version: 1.3.14
 
 packages:
+
+  '@effect/sql-sqlite-bun@4.0.0-beta.106':
+    resolution: {integrity: sha512-RkZomehIC6VmoAnpd7DjgGy557ld3BC2L+Yf83QY8xaInZRfmU4ChUwGwLh0uZHVaG13XqJU2INt80eunexpvg==}
+    peerDependencies:
+      effect: ^4.0.0-beta.106
 
   '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.4':
     resolution: {integrity: sha512-LCkGo6JDfaBhgST7UpPWgNgLINpcpabaHfyz5OBx75nUYxBsaEPxjnyNjWpeb/xBup/682QnBfRBy2/LvPutZQ==}
@@ -67,8 +75,8 @@ packages:
     resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
     engines: {node: '>=8'}
 
-  effect@4.0.0-beta.105:
-    resolution: {integrity: sha512-7U5OzWVNlpnZFvXiZfOeu8V+dCQUa3Om569HnYG2Dx8C8V6uoKS920kFJkIDEYVhlSGhzkRqaGKmYY9bPkBMMQ==}
+  effect@4.0.0-beta.106:
+    resolution: {integrity: sha512-Sb1eNPYP8UdkE6xDOEEnrrOh/Vu2ocdRTPSeZTjZXukUrEYT2NtuQpbS90sEWaa7b6qLt8dfEYPpa6IVe5giHw==}
 
   fast-check@4.9.0:
     resolution: {integrity: sha512-7ms6T7SybUev/PQITciI0yLM2pOSFy5zpG8Ty7tQofcVaQUvrMXp6CBwqF6fThLCLOrfBtuHAtwq6Yu4XPCllg==}
@@ -105,6 +113,10 @@ packages:
 
 snapshots:
 
+  '@effect/sql-sqlite-bun@4.0.0-beta.106(effect@4.0.0-beta.106)':
+    dependencies:
+      effect: 4.0.0-beta.106
+
   '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.4':
     optional: true
 
@@ -140,7 +152,7 @@ snapshots:
   detect-libc@2.1.2:
     optional: true
 
-  effect@4.0.0-beta.105:
+  effect@4.0.0-beta.106:
     dependencies:
       '@standard-schema/spec': 1.1.0
       fast-check: 4.9.0

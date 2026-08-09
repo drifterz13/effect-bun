@@ -6,7 +6,7 @@ import { handleApi } from "./projects/application/api/handleApi";
 const appRuntime = ManagedRuntime.make(ProjectService.layer);
 
 const server = Bun.serve({
-  port: 4000,
+  port: Number(Bun.env.PORT ?? 4000),
   routes: {
     "/": () => new Response("Hello world"),
     "/projects": async (req: Request) => {

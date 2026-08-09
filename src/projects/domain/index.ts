@@ -1,9 +1,9 @@
 export {
   type Project,
-  type ProjectId,
+  type UnRecordedProject,
   type ProjectError,
-  makeProjectId,
-  makeProject,
+  makeUnrecordProject,
+  fromRecordProject,
   addTasklist,
 } from "./project";
 export {

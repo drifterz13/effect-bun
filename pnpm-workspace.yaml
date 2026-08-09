@@ -1,2 +1,5 @@
 allowBuilds:
   msgpackr-extract: true
+minimumReleaseAgeExclude:
+  - '@effect/sql-sqlite-bun@4.0.0-beta.106'
+  - effect@4.0.0-beta.106

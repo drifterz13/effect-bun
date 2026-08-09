@@ -1,5 +1,6 @@
 import { Effect, Match, Schema } from "effect";
 import type { ProjectError, TasklistError } from "../../domain";
+import type { DatabaseError } from "../../../database/live";
 
 export type ApiResponse<T> =
   | { status: number; data: T }
@@ -8,7 +9,8 @@ export type ApiResponse<T> =
 export type ProjectApplicationError =
   | Schema.SchemaError
   | ProjectError
-  | TasklistError;
+  | TasklistError
+  | DatabaseError;
 
 const toProjectError = Match.type<ProjectApplicationError>().pipe(
   Match.tagsExhaustive({
@@ -28,6 +30,11 @@ const toProjectError = Match.type<ProjectApplicationError>().pipe(
     DuplicateTasklistError: (error) => ({
       status: 400,
       error: error.message,
+    }),
+    DatabaseError: (error) => ({
+      status: 500,
+      error: "Database error",
+      details: error.message,
     }),
   }),
 );

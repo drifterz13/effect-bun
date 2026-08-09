@@ -1,46 +1,35 @@
-import { Context, Effect, HashMap, Layer, Random, Ref } from "effect";
+import { Context, Effect, Layer } from "effect";
 import {
-  makeProject,
-  makeProjectId,
+  makeUnrecordProject,
   type Project,
   type ProjectError,
-  type ProjectId,
 } from "../../domain";
 import type { ProjectDTO } from "../dto/projectDto";
+import { ProjectRepository } from "../../infrastructure/projectRepository";
+import type { DatabaseError } from "../../../database/live";
 
 export class ProjectService extends Context.Service<ProjectService>()(
   "app/ProjectService",
   {
     make: Effect.gen(function* () {
-      const projects = yield* Ref.make(HashMap.empty<ProjectId, Project>());
+      const repo = yield* ProjectRepository;
 
       return {
-        find: (): Effect.Effect<Project[], never> =>
-          Ref.get(projects).pipe(
-            Effect.map((ref) => Array.from(HashMap.values(ref))),
+        find: (): Effect.Effect<Project[], ProjectError | DatabaseError> =>
+          repo.find(),
+
+        create: (
+          data: ProjectDTO,
+        ): Effect.Effect<Project, ProjectError | DatabaseError> =>
+          makeUnrecordProject(data).pipe(
+            Effect.fromResult,
+            Effect.flatMap(repo.create),
           ),
-        create: (data: ProjectDTO): Effect.Effect<Project, ProjectError> =>
-          Effect.gen(function* () {
-            const rawId = yield* Random.nextIntBetween(1, 100);
-            const projectId = makeProjectId(rawId);
-
-            const project = yield* Effect.fromResult(
-              makeProject({
-                id: projectId,
-                title: data.title,
-                description: data.description,
-                tasklistIds: [],
-              }),
-            );
-            yield* Ref.update(projects, (ref) =>
-              HashMap.set(ref, projectId, project),
-            );
-
-            return project;
-          }),
       };
     }),
   },
 ) {
-  static readonly layer = Layer.effect(this, this.make);
+  static readonly layer = Layer.effect(this, this.make).pipe(
+    Layer.provide(ProjectRepository.layer),
+  );
 }
